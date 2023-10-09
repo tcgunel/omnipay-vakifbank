@@ -27,8 +27,6 @@ class PurchaseResponse extends AbstractResponse
 
             try {
 
-                var_dump((string)$this->response->getBody());
-
                 $this->response = new PurchaseResponseModel(
                     Helper::flattenArray(
                         json_decode(
