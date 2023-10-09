@@ -1,0 +1,65 @@
+<?php
+
+namespace Omnipay\Vakifbank;
+
+use Omnipay\Common\AbstractGateway;
+use Omnipay\Common\Message\AbstractRequest;
+use Omnipay\Vakifbank\Message\EnrollmentRequest;
+use Omnipay\Vakifbank\Traits\PurchaseGettersSetters;
+use Omnipay\Vakifbank\Message\PurchaseRequest;
+
+/**
+ * Vakifbank Gateway
+ * (c) Tolga Can Günel
+ * 2015, mobius.studio
+ * http://www.github.com/tcgunel/omnipay-vakifbank
+ * @method \Omnipay\Common\Message\NotificationInterface acceptNotification(array $options = [])
+ * @method \Omnipay\Common\Message\RequestInterface completeAuthorize(array $options = [])
+ */
+class Gateway extends AbstractGateway
+{
+	use PurchaseGettersSetters;
+
+	public function getName(): string
+	{
+		return 'Vakifbank';
+	}
+
+	public function getDefaultParameters()
+	{
+		return [
+			"clientIp" => "127.0.0.1",
+
+			"installment"   => "1",
+			"nationalId"    => "11111111111",
+			"taxNumber"     => "",
+			"taxOffice"     => "",
+			"userReference" => "",
+			"secure"        => false,
+			"publicKey"     => "",
+			"privateKey"    => "",
+			"language"      => ["tr-TR", "en-US"],
+			"echo"          => "",
+			"version"       => '1.0',
+
+			"pageSize"  => '10',
+			"pageIndex" => '1',
+
+		];
+	}
+
+	public function enrollment(array $parameters = [])
+	{
+        return $this->createRequest(EnrollmentRequest::class, $parameters);
+	}
+
+	public function purchase(array $parameters = [])
+	{
+        return $this->createRequest(PurchaseRequest::class, $parameters);
+	}
+
+	public function fetchTransaction(array $parameters = [])
+	{
+        return $this->createRequest(PurchaseRequest::class, $parameters);
+	}
+}
