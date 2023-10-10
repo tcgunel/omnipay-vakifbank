@@ -38,6 +38,7 @@ class PurchaseRequest extends AbstractRequest
             'client_ip',
             'transaction_device_source',
             'testMode',
+            'order_id',
         );
 
         $this->getCard()->validate();
@@ -58,13 +59,15 @@ class PurchaseRequest extends AbstractRequest
             'MpiTransactionId'        => $this->getTransactionReference(),
             'ClientIp'                => $this->getClientIp(),
             'TransactionDeviceSource' => $this->getTransactionDeviceSource(),
+            'OrderId'                 => $this->getOrderId(),
+            'OrderDescription'        => $this->getDescription(),
         ];
     }
 
     private function prepareXml(array $data): string
     {
         $xml = '';
-        foreach ($data as $k => $v){
+        foreach ($data as $k => $v) {
             $xml .= "<$k>$v</$k>";
         }
 

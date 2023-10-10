@@ -104,4 +104,14 @@ trait PurchaseGettersSetters
         return $this->setParameter('transaction_device_source', $value);
     }
 
+    public function getOrderId()
+    {
+        return $this->getParameter('order_id');
+    }
+
+    public function setOrderId($value)
+    {
+        return $this->setParameter('order_id', $value);
+    }
+
 }
