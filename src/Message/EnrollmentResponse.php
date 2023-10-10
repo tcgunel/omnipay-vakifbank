@@ -18,9 +18,14 @@ class EnrollmentResponse extends AbstractResponse implements RedirectResponseInt
         return $this->isSuccessful();
     }
 
+    public function getCode()
+    {
+        return $this->getData()->MessageErrorCode;
+    }
+
     public function getMessage()
     {
-        $message = '';
+        $message = $this->getData()->ErrorMessage;
 
         if ($this->getData()->Status === 'E'){
 
