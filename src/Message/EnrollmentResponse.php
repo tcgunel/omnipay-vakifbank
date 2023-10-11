@@ -55,6 +55,11 @@ class EnrollmentResponse extends AbstractResponse implements RedirectResponseInt
         return 'POST';
     }
 
+    public function getData(): EnrollmentResponseModel
+    {
+        return $this->data;
+    }
+
     public function getRedirectData(): array
     {
         /** @var EnrollmentResponseModel $data */
