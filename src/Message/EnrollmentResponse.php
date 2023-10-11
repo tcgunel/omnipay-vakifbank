@@ -25,7 +25,7 @@ class EnrollmentResponse extends AbstractResponse implements RedirectResponseInt
 
     public function getMessage()
     {
-        $message = $this->getData()->ErrorMessage;
+        $message = $this->getData()->ErrorMessage ?? '';
 
         if ($this->getData()->Status === 'E'){
 
