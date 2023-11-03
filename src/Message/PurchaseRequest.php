@@ -44,26 +44,33 @@ class PurchaseRequest extends AbstractRequest
 
         $this->getCard()->validate();
 
-        return [
-            'MerchantId'              => $this->getMerchantId(),
-            'Password'                => $this->getPassword(),
-            'TerminalNo'              => $this->getTerminalNo(),
-            'Pan'                     => $this->getCard()->getNumber(),
-            'Cvv'                     => $this->getCard()->getCvv(),
-            'Expiry'                  => $this->getCard()->getExpiryDate('Ym'),
-            'CardHoldersName'         => $this->getCard()->getName(),
-            'CurrencyAmount'          => $this->getAmount(),
-            'CurrencyCode'            => $this->getCurrencyNumeric(),
-            'TransactionType'         => $this->getTransactionType(),
-            'ECI'                     => $this->getEci(),
-            'CAVV'                    => $this->getCavv(),
-            'MpiTransactionId'        => $this->getTransactionReference(),
-            'ClientIp'                => $this->getClientIp(),
-            'TransactionDeviceSource' => $this->getTransactionDeviceSource(),
-            'OrderId'                 => $this->getOrderId(),
-            'OrderDescription'        => $this->getDescription(),
-            'NumberOfInstallments'    => $this->getInstallment(),
-        ];
+		$data = [
+			'MerchantId'              => $this->getMerchantId(),
+			'Password'                => $this->getPassword(),
+			'TerminalNo'              => $this->getTerminalNo(),
+			'Pan'                     => $this->getCard()->getNumber(),
+			'Cvv'                     => $this->getCard()->getCvv(),
+			'Expiry'                  => $this->getCard()->getExpiryDate('Ym'),
+			'CardHoldersName'         => $this->getCard()->getName(),
+			'CurrencyAmount'          => $this->getAmount(),
+			'CurrencyCode'            => $this->getCurrencyNumeric(),
+			'TransactionType'         => $this->getTransactionType(),
+			'ECI'                     => $this->getEci(),
+			'CAVV'                    => $this->getCavv(),
+			'MpiTransactionId'        => $this->getTransactionReference(),
+			'ClientIp'                => $this->getClientIp(),
+			'TransactionDeviceSource' => $this->getTransactionDeviceSource(),
+			'OrderId'                 => $this->getOrderId(),
+			'OrderDescription'        => $this->getDescription(),
+		];
+
+		if ($this->getInstallment() > 1){
+
+			$data['NumberOfInstallments'] = $this->getInstallment();
+
+		}
+
+        return $data;
     }
 
     private function prepareXml(array $data): string
