@@ -38,7 +38,7 @@ class EnrollmentRequest extends AbstractRequest
             'password',
             'returnUrl',
             'cancelUrl',
-            //'installment',
+            'installment',
             'testMode',
         );
 
@@ -46,20 +46,27 @@ class EnrollmentRequest extends AbstractRequest
 
         $this->getCard()->addSupportedBrand('troy', '/^(?:9792|65\d{2}|36|2205)\d{12}$/');
 
-        return [
-            'Pan'                       => $this->getCard()->getNumber(),
-            'ExpiryDate'                => $this->getCard()->getExpiryDate('ym'),
-            'PurchaseAmount'            => $this->getAmount(),
-            'Currency'                  => $this->getCurrencyNumeric(),
-            'BrandName'                 => CardBrandTypes::get($this->getCard()->getBrand()),
-            'VerifyEnrollmentRequestId' => $this->getTransactionId(),
-            'SessionInfo'               => $this->getDescription(),
-            'MerchantId'                => $this->getMerchantId(),
-            'MerchantPassword'          => $this->getPassword(),
-            'SuccessUrl'                => $this->getReturnUrl(),
-            'FailureUrl'                => $this->getCancelUrl(),
-            'InstallmentCount'          => $this->getInstallment() > 1 ? $this->getInstallment() : null,
-        ];
+		$data = [
+			'Pan'                       => $this->getCard()->getNumber(),
+			'ExpiryDate'                => $this->getCard()->getExpiryDate('ym'),
+			'PurchaseAmount'            => $this->getAmount(),
+			'Currency'                  => $this->getCurrencyNumeric(),
+			'BrandName'                 => CardBrandTypes::get($this->getCard()->getBrand()),
+			'VerifyEnrollmentRequestId' => $this->getTransactionId(),
+			'SessionInfo'               => $this->getDescription(),
+			'MerchantId'                => $this->getMerchantId(),
+			'MerchantPassword'          => $this->getPassword(),
+			'SuccessUrl'                => $this->getReturnUrl(),
+			'FailureUrl'                => $this->getCancelUrl(),
+		];
+
+		if ($this->getInstallment() > 1){
+
+			$data['InstallmentCount'] = $this->getInstallment();
+
+		}
+
+        return $data;
     }
 
     /**

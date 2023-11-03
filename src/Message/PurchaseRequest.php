@@ -39,6 +39,7 @@ class PurchaseRequest extends AbstractRequest
             'transaction_device_source',
             'testMode',
             'order_id',
+            'installment',
         );
 
         $this->getCard()->validate();
@@ -61,6 +62,7 @@ class PurchaseRequest extends AbstractRequest
             'TransactionDeviceSource' => $this->getTransactionDeviceSource(),
             'OrderId'                 => $this->getOrderId(),
             'OrderDescription'        => $this->getDescription(),
+            'NumberOfInstallments'    => $this->getInstallment(),
         ];
     }
 

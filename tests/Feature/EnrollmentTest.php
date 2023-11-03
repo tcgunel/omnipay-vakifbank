@@ -29,6 +29,7 @@ class EnrollmentTest extends TestCase
             'return_url'    => 'https://omnipay.dev/success_url',
             'cancel_url'    => 'https://omnipay.dev/cancel_url',
             'description'   => '',
+            'installment'   => '1',
             'card'          => [
                 'number'      => '6501700161161969',
                 'expiryYear'  => '2024',
@@ -48,7 +49,6 @@ class EnrollmentTest extends TestCase
             'MerchantPassword'          => 'P@ssw0rd',
             'SuccessUrl'                => 'https://omnipay.dev/success_url',
             'FailureUrl'                => 'https://omnipay.dev/cancel_url',
-            'InstallmentCount'          => null,
         ];
 
         $request = new EnrollmentRequest($this->getHttpClient(), $this->getHttpRequest());

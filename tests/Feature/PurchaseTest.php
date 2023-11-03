@@ -35,6 +35,7 @@ class PurchaseTest extends TestCase
             'transactionReference'      => 'trans_reference',
             'client_ip'                 => '127.0.0.1',
             'transaction_device_source' => '0',
+            'installment' 				=> '1',
             'card'                      => [
                 'number'      => '6501700161161969',
                 'expiryYear'  => '2024',
@@ -60,6 +61,7 @@ class PurchaseTest extends TestCase
             'MpiTransactionId'        => 'trans_reference',
             'ClientIp'                => '127.0.0.1',
             'TransactionDeviceSource' => '0',
+            'NumberOfInstallments' 	  => '1',
         ];
 
         $request = new PurchaseRequest($this->getHttpClient(), $this->getHttpRequest());
