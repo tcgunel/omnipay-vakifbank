@@ -6,6 +6,7 @@ use Omnipay\Common\Exception\InvalidCreditCardException;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Message\AbstractRequest;
 use Omnipay\Vakifbank\Constants\CardBrandTypes;
+use Omnipay\Vakifbank\Exceptions\OmnipayVakifbankCardBrandTypeException;
 use Omnipay\Vakifbank\Exceptions\OmnipayVakifbankEnrollmentRequestException;
 use Omnipay\Vakifbank\Exceptions\OmnipayVakifbankEnrollmentResponseException;
 use Omnipay\Vakifbank\Helpers\Helper;
@@ -45,6 +46,17 @@ class EnrollmentRequest extends AbstractRequest
         $this->getCard()->validate();
 
         $this->getCard()->addSupportedBrand('troy', '/^(?:9792|65\d{2}|36|2205)\d{12}$/');
+
+		if (empty(CardBrandTypes::get($this->getCard()->getBrand()))) {
+
+			throw new OmnipayVakifbankCardBrandTypeException(
+				sprintf(
+					'Kartınız desteklenmiyor. Sadece %s kartlar ile ödeme yapılabilir.',
+					implode(', ', array_map('strtoupper', array_keys(CardBrandTypes::all())))
+				),
+			);
+
+		}
 
 		$data = [
 			'Pan'                       => $this->getCard()->getNumber(),
