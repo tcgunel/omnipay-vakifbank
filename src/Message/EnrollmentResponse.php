@@ -27,13 +27,13 @@ class EnrollmentResponse extends AbstractResponse implements RedirectResponseInt
     {
         $message = $this->getData()->ErrorMessage ?? '';
 
-        if ($this->getData()->Status === 'E'){
+        if (empty($message) && $this->getData()->Status === 'E'){
 
             $message = '3D işlem sırasında bir hata oluştu. Kartınızın 3D işlemlere açık olduğunu ve limitinizin yeterli olduğunu kontrol ediniz.';
 
         }
 
-        if ($this->getData()->Status !== 'Y'){
+        if (empty($message) && $this->getData()->Status !== 'Y'){
 
             $message = 'Kartınız 3D ödeme yöntemi programına dahil değil. Bankanıza başvurunuz.';
 
