@@ -6,6 +6,21 @@ parameters:
 			path: src/Helpers/Helper.php
 
 		-
+			message: "#^Method Omnipay\\\\Vakifbank\\\\Message\\\\CommonPaymentQueryResponse\\:\\:getRedirectData\\(\\) should return array but returns null\\.$#"
+			count: 1
+			path: src/Message/CommonPaymentQueryResponse.php
+
+		-
+			message: "#^Call to an undefined method Omnipay\\\\Common\\\\Message\\\\RequestInterface\\:\\:getTestMode\\(\\)\\.$#"
+			count: 1
+			path: src/Message/CommonPaymentRegisterResponse.php
+
+		-
+			message: "#^Method Omnipay\\\\Vakifbank\\\\Message\\\\CommonPaymentRegisterResponse\\:\\:getRedirectData\\(\\) should return array but returns null\\.$#"
+			count: 1
+			path: src/Message/CommonPaymentRegisterResponse.php
+
+		-
 			message: "#^Method Omnipay\\\\Vakifbank\\\\Message\\\\EnrollmentResponse\\:\\:getCode\\(\\) should return string\\|null but returns int\\.$#"
 			count: 1
 			path: src/Message/EnrollmentResponse.php
@@ -14,6 +29,16 @@ parameters:
 			message: "#^Method Omnipay\\\\Vakifbank\\\\Message\\\\PurchaseResponse\\:\\:getRedirectData\\(\\) should return array but returns null\\.$#"
 			count: 1
 			path: src/Message/PurchaseResponse.php
+
+		-
+			message: "#^Method Omnipay\\\\Vakifbank\\\\Message\\\\RefundResponse\\:\\:getRedirectData\\(\\) should return array but returns null\\.$#"
+			count: 1
+			path: src/Message/RefundResponse.php
+
+		-
+			message: "#^Method Omnipay\\\\Vakifbank\\\\Message\\\\VoidResponse\\:\\:getRedirectData\\(\\) should return array but returns null\\.$#"
+			count: 1
+			path: src/Message/VoidResponse.php
 
 		-
 			message: "#^Call to an undefined method ReflectionType\\:\\:getName\\(\\)\\.$#"

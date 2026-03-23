@@ -77,7 +77,7 @@ class PurchaseRequest extends AbstractRequest
     {
         $xml = '';
         foreach ($data as $k => $v) {
-            $xml .= "<$k>$v</$k>";
+            $xml .= "<$k>" . htmlspecialchars((string) $v, ENT_XML1, 'UTF-8') . "</$k>";
         }
 
         return "<VposRequest>$xml</VposRequest>";
@@ -106,10 +106,5 @@ class PurchaseRequest extends AbstractRequest
         }
 
         return new PurchaseResponse($this, $httpResponse);
-    }
-
-    protected function createResponse($data): EnrollmentResponse
-    {
-        return new EnrollmentResponse($this, $data);
     }
 }

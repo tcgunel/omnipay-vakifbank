@@ -3,9 +3,13 @@
 namespace Omnipay\Vakifbank;
 
 use Omnipay\Common\AbstractGateway;
+use Omnipay\Vakifbank\Message\CommonPaymentQueryRequest;
+use Omnipay\Vakifbank\Message\CommonPaymentRegisterRequest;
 use Omnipay\Vakifbank\Message\EnrollmentRequest;
 use Omnipay\Vakifbank\Message\FetchTransactionRequest;
 use Omnipay\Vakifbank\Message\PurchaseRequest;
+use Omnipay\Vakifbank\Message\RefundRequest;
+use Omnipay\Vakifbank\Message\VoidRequest;
 use Omnipay\Vakifbank\Traits\PurchaseGettersSetters;
 
 /**
@@ -46,5 +50,25 @@ class Gateway extends AbstractGateway
     public function fetchTransaction(array $parameters = [])
     {
         return $this->createRequest(FetchTransactionRequest::class, $parameters);
+    }
+
+    public function refund(array $parameters = [])
+    {
+        return $this->createRequest(RefundRequest::class, $parameters);
+    }
+
+    public function void(array $parameters = [])
+    {
+        return $this->createRequest(VoidRequest::class, $parameters);
+    }
+
+    public function commonPaymentRegister(array $parameters = [])
+    {
+        return $this->createRequest(CommonPaymentRegisterRequest::class, $parameters);
+    }
+
+    public function commonPaymentQuery(array $parameters = [])
+    {
+        return $this->createRequest(CommonPaymentQueryRequest::class, $parameters);
     }
 }
