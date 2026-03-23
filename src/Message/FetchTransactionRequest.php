@@ -12,9 +12,9 @@ class FetchTransactionRequest extends AbstractRequest
 {
     use PurchaseGettersSetters;
 
-    protected $test_endpoint = "https://onlineodemetest.vakifbank.com.tr:4443/UIService/Search.aspx";
+    protected $test_endpoint = 'https://onlineodemetest.vakifbank.com.tr:4443/UIService/Search.aspx';
 
-    protected $prod_endpoint = "https://onlineodeme.vakifbank.com.tr:4443/UIService/Search.aspx";
+    protected $prod_endpoint = 'https://onlineodeme.vakifbank.com.tr:4443/UIService/Search.aspx';
 
     /**
      * @throws InvalidRequestException
@@ -33,10 +33,10 @@ class FetchTransactionRequest extends AbstractRequest
         }
 
         return [
-            'HostMerchantId'   => $this->getMerchantId(),
+            'HostMerchantId' => $this->getMerchantId(),
             'MerchantPassword' => $this->getPassword(),
-            'TransactionId'    => $this->getTransactionId(),
-            'OrderId'          => $this->getOrderId(),
+            'TransactionId' => $this->getTransactionId(),
+            'OrderId' => $this->getOrderId(),
         ];
     }
 
@@ -65,7 +65,7 @@ class FetchTransactionRequest extends AbstractRequest
             $this->getTestMode() ? $this->test_endpoint : $this->prod_endpoint,
             [
                 'Content-Type' => 'application/x-www-form-urlencoded',
-                'Accept'       => 'application/xml',
+                'Accept' => 'application/xml',
             ],
             http_build_query(['prmstr' => $this->prepareXml($data)])
         );

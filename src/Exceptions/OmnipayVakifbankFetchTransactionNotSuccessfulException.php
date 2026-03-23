@@ -2,6 +2,6 @@
 
 namespace Omnipay\Vakifbank\Exceptions;
 
-class OmnipayVakifbankFetchTransactionNotSuccessfulException extends \Exception{
-
+class OmnipayVakifbankFetchTransactionNotSuccessfulException extends \Exception
+{
 }

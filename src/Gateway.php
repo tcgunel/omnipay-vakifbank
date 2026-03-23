@@ -5,8 +5,8 @@ namespace Omnipay\Vakifbank;
 use Omnipay\Common\AbstractGateway;
 use Omnipay\Vakifbank\Message\EnrollmentRequest;
 use Omnipay\Vakifbank\Message\FetchTransactionRequest;
-use Omnipay\Vakifbank\Traits\PurchaseGettersSetters;
 use Omnipay\Vakifbank\Message\PurchaseRequest;
+use Omnipay\Vakifbank\Traits\PurchaseGettersSetters;
 
 /**
  * Vakifbank Gateway
@@ -18,33 +18,33 @@ use Omnipay\Vakifbank\Message\PurchaseRequest;
  */
 class Gateway extends AbstractGateway
 {
-	use PurchaseGettersSetters;
+    use PurchaseGettersSetters;
 
-	public function getName(): string
-	{
-		return 'Vakifbank';
-	}
+    public function getName(): string
+    {
+        return 'Vakifbank';
+    }
 
-	public function getDefaultParameters()
-	{
-		return [
-			"clientIp" => "127.0.0.1",
-			"secure"        => false,
-		];
-	}
+    public function getDefaultParameters()
+    {
+        return [
+            'clientIp' => '127.0.0.1',
+            'secure' => false,
+        ];
+    }
 
-	public function enrollment(array $parameters = [])
-	{
+    public function enrollment(array $parameters = [])
+    {
         return $this->createRequest(EnrollmentRequest::class, $parameters);
-	}
+    }
 
-	public function purchase(array $parameters = [])
-	{
+    public function purchase(array $parameters = [])
+    {
         return $this->createRequest(PurchaseRequest::class, $parameters);
-	}
+    }
 
-	public function fetchTransaction(array $parameters = [])
-	{
+    public function fetchTransaction(array $parameters = [])
+    {
         return $this->createRequest(FetchTransactionRequest::class, $parameters);
-	}
+    }
 }

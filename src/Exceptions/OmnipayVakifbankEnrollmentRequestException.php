@@ -2,6 +2,6 @@
 
 namespace Omnipay\Vakifbank\Exceptions;
 
-class OmnipayVakifbankEnrollmentRequestException extends \Exception{
-
+class OmnipayVakifbankEnrollmentRequestException extends \Exception
+{
 }

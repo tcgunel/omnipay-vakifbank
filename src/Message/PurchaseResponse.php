@@ -5,9 +5,9 @@ namespace Omnipay\Vakifbank\Message;
 use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\RequestInterface;
 use Omnipay\Vakifbank\Exceptions\OmnipayVakifbankPurchaseResponseException;
+use Omnipay\Vakifbank\Helpers\Helper;
 use Omnipay\Vakifbank\Models\PurchaseResponseModel;
 use Psr\Http\Message\ResponseInterface;
-use Omnipay\Vakifbank\Helpers\Helper;
 
 class PurchaseResponse extends AbstractResponse
 {
@@ -31,7 +31,7 @@ class PurchaseResponse extends AbstractResponse
                     Helper::flattenArray(
                         json_decode(
                             json_encode(
-                                simplexml_load_string((string)$this->response->getBody()),
+                                simplexml_load_string((string) $this->response->getBody()),
                                 JSON_THROW_ON_ERROR
                             ),
                             true,

@@ -18,7 +18,7 @@ class BaseModel
 
                     $this->$key = new $property_type($arg);
 
-                } else if (in_array($property_type, ['string', 'int', 'float', 'bool'], true)) {
+                } elseif (in_array($property_type, ['string', 'int', 'float', 'bool'], true)) {
 
                     $this->$key = $arg;
 
@@ -28,8 +28,9 @@ class BaseModel
 
         }
 
-        if (!empty($abstract))
+        if (!empty($abstract)) {
             $this->original_response = json_encode($abstract);
+        }
     }
 
     public string $original_response;

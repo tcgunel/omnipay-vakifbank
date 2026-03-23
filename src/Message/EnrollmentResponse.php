@@ -27,13 +27,13 @@ class EnrollmentResponse extends AbstractResponse implements RedirectResponseInt
     {
         $message = $this->getData()->ErrorMessage ?? '';
 
-        if (empty($message) && $this->getData()->Status === 'E'){
+        if (empty($message) && $this->getData()->Status === 'E') {
 
             $message = '3D işlem sırasında bir hata oluştu. Kartınızın 3D işlemlere açık olduğunu ve limitinizin yeterli olduğunu kontrol ediniz.';
 
         }
 
-        if (empty($message) && $this->getData()->Status !== 'Y'){
+        if (empty($message) && $this->getData()->Status !== 'Y') {
 
             $message = 'Kartınız 3D ödeme yöntemi programına dahil değil. Bankanıza başvurunuz.';
 
@@ -66,9 +66,9 @@ class EnrollmentResponse extends AbstractResponse implements RedirectResponseInt
         $data = $this->getData();
 
         return [
-            'PaReq'   => $data->PaReq,
+            'PaReq' => $data->PaReq,
             'TermUrl' => $data->TermUrl,
-            'MD'      => $data->MD,
+            'MD' => $data->MD,
         ];
     }
 
@@ -77,7 +77,7 @@ class EnrollmentResponse extends AbstractResponse implements RedirectResponseInt
     {
         $response = parent::getRedirectResponse();
 
-        $response->setContent(str_replace("<body", "<body style='color:#FFF'", $response->getContent()));
+        $response->setContent(str_replace('<body', "<body style='color:#FFF'", $response->getContent()));
 
         $script = '<script>
 			document.forms[0].style.display = "none";
@@ -90,9 +90,9 @@ class EnrollmentResponse extends AbstractResponse implements RedirectResponseInt
 			}, 5000);
 		</script>';
 
-        $response->setContent(str_replace("</body>", "$script</body>", $response->getContent()));
+        $response->setContent(str_replace('</body>', "$script</body>", $response->getContent()));
 
-        $response->setContent(str_replace("</body>", $this->redirectSpinner() . "</body>", $response->getContent()));
+        $response->setContent(str_replace('</body>', $this->redirectSpinner() . '</body>', $response->getContent()));
 
         return $response;
     }

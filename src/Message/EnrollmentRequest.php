@@ -20,9 +20,9 @@ class EnrollmentRequest extends AbstractRequest
 {
     use PurchaseGettersSetters;
 
-    protected $test_endpoint = "https://3dsecuretest.vakifbank.com.tr:4443/MPIAPI/MPI_Enrollment.aspx";
+    protected $test_endpoint = 'https://3dsecuretest.vakifbank.com.tr:4443/MPIAPI/MPI_Enrollment.aspx';
 
-    protected $prod_endpoint = "https://3dsecure.vakifbank.com.tr:4443/MPIAPI/MPI_Enrollment.aspx";
+    protected $prod_endpoint = 'https://3dsecure.vakifbank.com.tr:4443/MPIAPI/MPI_Enrollment.aspx';
 
     /**
      * @throws InvalidRequestException
@@ -47,36 +47,36 @@ class EnrollmentRequest extends AbstractRequest
 
         $this->getCard()->addSupportedBrand('troy', '/^(?:9792|65\d{2}|36|2205)\d{12}$/');
 
-		if (empty(CardBrandTypes::get($this->getCard()->getBrand()))) {
+        if (empty(CardBrandTypes::get($this->getCard()->getBrand()))) {
 
-			throw new OmnipayVakifbankCardBrandTypeException(
-				sprintf(
-					'Kartınız desteklenmiyor. Sadece %s kartlar ile ödeme yapılabilir.',
-					implode(', ', array_map('strtoupper', array_keys(CardBrandTypes::all())))
-				),
-			);
+            throw new OmnipayVakifbankCardBrandTypeException(
+                sprintf(
+                    'Kartınız desteklenmiyor. Sadece %s kartlar ile ödeme yapılabilir.',
+                    implode(', ', array_map('strtoupper', array_keys(CardBrandTypes::all())))
+                ),
+            );
 
-		}
+        }
 
-		$data = [
-			'Pan'                       => $this->getCard()->getNumber(),
-			'ExpiryDate'                => $this->getCard()->getExpiryDate('ym'),
-			'PurchaseAmount'            => $this->getAmount(),
-			'Currency'                  => $this->getCurrencyNumeric(),
-			'BrandName'                 => CardBrandTypes::get($this->getCard()->getBrand()),
-			'VerifyEnrollmentRequestId' => $this->getTransactionId(),
-			'SessionInfo'               => $this->getDescription(),
-			'MerchantId'                => $this->getMerchantId(),
-			'MerchantPassword'          => $this->getPassword(),
-			'SuccessUrl'                => $this->getReturnUrl(),
-			'FailureUrl'                => $this->getCancelUrl(),
-		];
+        $data = [
+            'Pan' => $this->getCard()->getNumber(),
+            'ExpiryDate' => $this->getCard()->getExpiryDate('ym'),
+            'PurchaseAmount' => $this->getAmount(),
+            'Currency' => $this->getCurrencyNumeric(),
+            'BrandName' => CardBrandTypes::get($this->getCard()->getBrand()),
+            'VerifyEnrollmentRequestId' => $this->getTransactionId(),
+            'SessionInfo' => $this->getDescription(),
+            'MerchantId' => $this->getMerchantId(),
+            'MerchantPassword' => $this->getPassword(),
+            'SuccessUrl' => $this->getReturnUrl(),
+            'FailureUrl' => $this->getCancelUrl(),
+        ];
 
-		if ($this->getInstallment() > 1){
+        if ($this->getInstallment() > 1) {
 
-			$data['InstallmentCount'] = $this->getInstallment();
+            $data['InstallmentCount'] = $this->getInstallment();
 
-		}
+        }
 
         return $data;
     }
@@ -92,7 +92,7 @@ class EnrollmentRequest extends AbstractRequest
             $this->getTestMode() ? $this->test_endpoint : $this->prod_endpoint,
             [
                 'Content-Type' => 'application/x-www-form-urlencoded',
-                'Accept'       => 'application/xml',
+                'Accept' => 'application/xml',
             ],
             http_build_query($data)
         );
@@ -109,7 +109,7 @@ class EnrollmentRequest extends AbstractRequest
                 Helper::flattenArray(
                     json_decode(
                         json_encode(
-                            simplexml_load_string((string)$httpResponse->getBody()),
+                            simplexml_load_string((string) $httpResponse->getBody()),
                             JSON_THROW_ON_ERROR
                         ),
                         true,
@@ -130,6 +130,6 @@ class EnrollmentRequest extends AbstractRequest
 
     protected function createResponse($data): EnrollmentResponse
     {
-
+        return new EnrollmentResponse($this, $data);
     }
 }

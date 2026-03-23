@@ -2,6 +2,6 @@
 
 namespace Omnipay\Vakifbank\Exceptions;
 
-class OmnipayVakifbankCardBrandTypeException extends \Exception{
-
+class OmnipayVakifbankCardBrandTypeException extends \Exception
+{
 }

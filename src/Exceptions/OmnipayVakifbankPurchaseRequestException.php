@@ -2,6 +2,6 @@
 
 namespace Omnipay\Vakifbank\Exceptions;
 
-class OmnipayVakifbankPurchaseRequestException extends \Exception{
-
+class OmnipayVakifbankPurchaseRequestException extends \Exception
+{
 }

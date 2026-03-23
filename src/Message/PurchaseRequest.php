@@ -14,9 +14,9 @@ class PurchaseRequest extends AbstractRequest
 {
     use PurchaseGettersSetters;
 
-    protected $test_endpoint = "https://onlineodemetest.vakifbank.com.tr:4443/VposService/v3/Vposreq.aspx";
+    protected $test_endpoint = 'https://onlineodemetest.vakifbank.com.tr:4443/VposService/v3/Vposreq.aspx';
 
-    protected $prod_endpoint = "https://onlineodeme.vakifbank.com.tr:4443/VposService/v3/Vposreq.aspx";
+    protected $prod_endpoint = 'https://onlineodeme.vakifbank.com.tr:4443/VposService/v3/Vposreq.aspx';
 
     /**
      * @throws InvalidRequestException
@@ -44,31 +44,31 @@ class PurchaseRequest extends AbstractRequest
 
         $this->getCard()->validate();
 
-		$data = [
-			'MerchantId'              => $this->getMerchantId(),
-			'Password'                => $this->getPassword(),
-			'TerminalNo'              => $this->getTerminalNo(),
-			'Pan'                     => $this->getCard()->getNumber(),
-			'Cvv'                     => $this->getCard()->getCvv(),
-			'Expiry'                  => $this->getCard()->getExpiryDate('Ym'),
-			'CardHoldersName'         => $this->getCard()->getName(),
-			'CurrencyAmount'          => $this->getAmount(),
-			'CurrencyCode'            => $this->getCurrencyNumeric(),
-			'TransactionType'         => $this->getTransactionType(),
-			'ECI'                     => $this->getEci(),
-			'CAVV'                    => $this->getCavv(),
-			'MpiTransactionId'        => $this->getTransactionReference(),
-			'ClientIp'                => $this->getClientIp(),
-			'TransactionDeviceSource' => $this->getTransactionDeviceSource(),
-			'OrderId'                 => $this->getOrderId(),
-			'OrderDescription'        => $this->getDescription(),
-		];
+        $data = [
+            'MerchantId' => $this->getMerchantId(),
+            'Password' => $this->getPassword(),
+            'TerminalNo' => $this->getTerminalNo(),
+            'Pan' => $this->getCard()->getNumber(),
+            'Cvv' => $this->getCard()->getCvv(),
+            'Expiry' => $this->getCard()->getExpiryDate('Ym'),
+            'CardHoldersName' => $this->getCard()->getName(),
+            'CurrencyAmount' => $this->getAmount(),
+            'CurrencyCode' => $this->getCurrencyNumeric(),
+            'TransactionType' => $this->getTransactionType(),
+            'ECI' => $this->getEci(),
+            'CAVV' => $this->getCavv(),
+            'MpiTransactionId' => $this->getTransactionReference(),
+            'ClientIp' => $this->getClientIp(),
+            'TransactionDeviceSource' => $this->getTransactionDeviceSource(),
+            'OrderId' => $this->getOrderId(),
+            'OrderDescription' => $this->getDescription(),
+        ];
 
-		if ($this->getInstallment() > 1){
+        if ($this->getInstallment() > 1) {
 
-			$data['NumberOfInstallments'] = $this->getInstallment();
+            $data['NumberOfInstallments'] = $this->getInstallment();
 
-		}
+        }
 
         return $data;
     }
@@ -94,7 +94,7 @@ class PurchaseRequest extends AbstractRequest
             $this->getTestMode() ? $this->test_endpoint : $this->prod_endpoint,
             [
                 'Content-Type' => 'application/x-www-form-urlencoded',
-                'Accept'       => 'application/xml',
+                'Accept' => 'application/xml',
             ],
             http_build_query(['prmstr' => $this->prepareXml($data)])
         );
@@ -110,6 +110,6 @@ class PurchaseRequest extends AbstractRequest
 
     protected function createResponse($data): EnrollmentResponse
     {
-
+        return new EnrollmentResponse($this, $data);
     }
 }

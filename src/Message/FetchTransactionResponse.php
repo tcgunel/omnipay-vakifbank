@@ -26,9 +26,9 @@ class FetchTransactionResponse extends AbstractResponse
 
         if ($this->response instanceof ResponseInterface) {
 
-            $this->response = simplexml_load_string((string)$this->response->getBody());
+            $this->response = simplexml_load_string((string) $this->response->getBody());
 
-            if ((string)$this->response->ResponseInfo->ResponseCode !== '0000'){
+            if ((string) $this->response->ResponseInfo->ResponseCode !== '0000') {
 
                 throw new OmnipayVakifbankFetchTransactionNotSuccessfulException('Fetch transaction sırasında bir hata oluştu.' . $this->response->ResponseInfo->ResponseMessage);
 
@@ -40,12 +40,12 @@ class FetchTransactionResponse extends AbstractResponse
 
     public function isSuccessful(): bool
     {
-        return (string)$this->response->ResponseInfo->ResponseCode === '0000' && $this->transaction_info->HostResultCode === '000' && $this->transaction_info->ResultCode === '0000';
+        return (string) $this->response->ResponseInfo->ResponseCode === '0000' && $this->transaction_info->HostResultCode === '000' && $this->transaction_info->ResultCode === '0000';
     }
 
     public function getMessage(): string
     {
-        return (string)$this->response->ResponseInfo->ResponseCode !== '0000' ? (string)$this->response->ResponseInfo->ResponseMessage : $this->transaction_info->ResponseMessage;
+        return (string) $this->response->ResponseInfo->ResponseCode !== '0000' ? (string) $this->response->ResponseInfo->ResponseMessage : $this->transaction_info->ResponseMessage;
     }
 
     public function getData(): FetchTransactionResponseModel
