@@ -32,7 +32,7 @@
         }
     },
     "require": {
-        "php": "^7.4|^8.0",
+        "php": "^8.3",
         "league/omnipay": "^3",
         "ext-json": "*",
         "ext-simplexml": "*",
