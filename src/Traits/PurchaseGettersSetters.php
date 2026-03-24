@@ -114,4 +114,13 @@ trait PurchaseGettersSetters
         return $this->setParameter('order_id', $value);
     }
 
+    public function getSubMerchantId()
+    {
+        return $this->getParameter('sub_merchant_id');
+    }
+
+    public function setSubMerchantId($value)
+    {
+        return $this->setParameter('sub_merchant_id', $value);
+    }
 }

@@ -31,7 +31,6 @@ class CommonPaymentQueryRequest extends AbstractRequest
         $this->validate(
             'merchant_id',
             'password',
-            'terminal_no',
         );
 
         if (! $this->getPaymentToken() && ! $this->getTransactionId()) {
@@ -40,11 +39,12 @@ class CommonPaymentQueryRequest extends AbstractRequest
 
         }
 
-        // v2.1 API uses different field names
+        // Section 6.5: HostMerchantId, MerchantId, Password
+        // No terminal number needed for query
         $data = [
-            'MerchantNumber' => $this->getMerchantId(),
+            'HostMerchantId' => $this->getMerchantId(),
+            'MerchantId' => $this->getSubMerchantId() ?: '1',
             'Password' => $this->getPassword(),
-            'TerminalNumber' => $this->getTerminalNo(),
         ];
 
         if ($this->getPaymentToken()) {

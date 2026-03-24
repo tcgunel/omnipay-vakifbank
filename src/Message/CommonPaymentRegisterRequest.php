@@ -42,6 +42,7 @@ class CommonPaymentRegisterRequest extends AbstractRequest
 
         $data = [
             'HostMerchantId' => $this->getMerchantId(),
+            'MerchantId' => $this->getSubMerchantId() ?: '1',
             'MerchantPassword' => $this->getPassword(),
             'HostTerminalId' => $this->getTerminalNo(),
             'TransactionId' => $this->getTransactionId(),
@@ -49,7 +50,7 @@ class CommonPaymentRegisterRequest extends AbstractRequest
             'AmountCode' => $currencyCode,
             'TransactionType' => 'Sale',
             'IsSecure' => 'true',
-            'AllowNotEnrolledCard' => 'false',
+            'AllowNotEnrolledCard' => 'true',
             'SuccessUrl' => $this->getReturnUrl(),
             'FailUrl' => $this->getCancelUrl(),
         ];
