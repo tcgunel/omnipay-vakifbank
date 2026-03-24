@@ -7,13 +7,19 @@ use Omnipay\Common\Message\AbstractRequest;
 use Omnipay\Vakifbank\Exceptions\OmnipayVakifbankCommonPaymentRequestException;
 use Omnipay\Vakifbank\Traits\PurchaseGettersSetters;
 
+/**
+ * Vakifbank Common Payment (Ortak Odeme) - Register Transaction
+ *
+ * Uses the new API Gateway endpoints (v2.1, updated 27.02.2026).
+ * The old .asmx endpoints have been decommissioned.
+ */
 class CommonPaymentRegisterRequest extends AbstractRequest
 {
     use PurchaseGettersSetters;
 
-    protected $test_endpoint = 'https://onlineodemetest.vakifbank.com.tr:4443/UIService/CommonPayment.asmx';
+    protected $test_endpoint = 'https://inbound.apigatewaytest.vakifbank.com.tr:8443/commonPayment/CreateToken';
 
-    protected $prod_endpoint = 'https://web.vakifbank.com.tr/ServiceHost/Vpos7/CommonPayment.asmx';
+    protected $prod_endpoint = 'https://inbound.apigateway.vakifbank.com.tr:8443/commonPayment/CreateToken';
 
     /**
      * @throws InvalidRequestException
@@ -29,21 +35,21 @@ class CommonPaymentRegisterRequest extends AbstractRequest
             'currency',
             'returnUrl',
             'cancelUrl',
-            'installment',
         );
 
         $amount = number_format((float) $this->getAmount(), 2, '.', '');
         $currencyCode = (string) $this->getCurrencyNumeric();
-        $transactionId = $this->getTransactionId();
 
         $data = [
             'HostMerchantId' => $this->getMerchantId(),
             'MerchantPassword' => $this->getPassword(),
             'HostTerminalId' => $this->getTerminalNo(),
-            'TransactionId' => $transactionId,
+            'TransactionId' => $this->getTransactionId(),
             'Amount' => $amount,
-            'CurrencyCode' => $currencyCode,
+            'AmountCode' => $currencyCode,
+            'TransactionType' => 'Sale',
             'IsSecure' => 'true',
+            'AllowNotEnrolledCard' => 'false',
             'SuccessUrl' => $this->getReturnUrl(),
             'FailUrl' => $this->getCancelUrl(),
         ];
@@ -55,11 +61,6 @@ class CommonPaymentRegisterRequest extends AbstractRequest
         if ($this->getInstallment() > 1) {
             $data['InstallmentCount'] = (string) $this->getInstallment();
         }
-
-        // Compute hash: SHA256(merchant_id + terminal_no + amount + currency_code + transaction_id + password)
-        $hashInput = $this->getMerchantId() . $this->getTerminalNo() . $amount . $currencyCode . $transactionId . $this->getPassword();
-        $hashInput = mb_convert_encoding($hashInput, 'ISO-8859-9', 'UTF-8');
-        $data['HashData'] = base64_encode(hash('sha256', $hashInput, true));
 
         return $data;
     }
@@ -74,7 +75,7 @@ class CommonPaymentRegisterRequest extends AbstractRequest
             $this->getTestMode() ? $this->test_endpoint : $this->prod_endpoint,
             [
                 'Content-Type' => 'application/x-www-form-urlencoded',
-                'Accept' => 'text/html',
+                'Accept' => 'application/json',
             ],
             http_build_query($data)
         );

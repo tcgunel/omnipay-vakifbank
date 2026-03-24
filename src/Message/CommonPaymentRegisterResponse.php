@@ -6,12 +6,20 @@ use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\RedirectResponseInterface;
 use Omnipay\Common\Message\RequestInterface;
 
+/**
+ * Vakifbank Common Payment Register Response (v2.1 API Gateway)
+ *
+ * Response is JSON:
+ * {
+ *   "CommonPaymentUrl": "https://guvenliodeme-test.vakifbank.com.tr/...",
+ *   "PaymentToken": "uuid",
+ *   "ShortLink": "https://...",
+ *   "ResponseMessage": "ISLEM BASARILI",
+ *   "ErrorCode": "0000"
+ * }
+ */
 class CommonPaymentRegisterResponse extends AbstractResponse implements RedirectResponseInterface
 {
-    protected $test_redirect_base = 'https://onlineodemetest.vakifbank.com.tr:4443/UIService/CommonPayment.aspx';
-
-    protected $prod_redirect_base = 'https://web.vakifbank.com.tr/ServiceHost/Vpos7/CommonPayment.aspx';
-
     protected $parsedData = [];
 
     protected $request;
@@ -22,15 +30,17 @@ class CommonPaymentRegisterResponse extends AbstractResponse implements Redirect
 
         $this->request = $request;
 
-        // Parse key=value response body
+        // v2.1 API Gateway returns JSON
         if (is_string($data)) {
-            parse_str($data, $this->parsedData);
+            $decoded = json_decode($data, true);
+            $this->parsedData = is_array($decoded) ? $decoded : [];
         }
     }
 
     public function isSuccessful(): bool
     {
-        return !empty($this->getPaymentToken());
+        return ! empty($this->getPaymentToken())
+            && ($this->parsedData['ErrorCode'] ?? '') === '0000';
     }
 
     public function isRedirect(): bool
@@ -42,20 +52,23 @@ class CommonPaymentRegisterResponse extends AbstractResponse implements Redirect
     {
         $token = $this->parsedData['PaymentToken'] ?? null;
 
-        return !empty($token) ? $token : null;
+        return ! empty($token) ? $token : null;
     }
 
     public function getRedirectUrl()
     {
-        if (!$this->isSuccessful()) {
+        if (! $this->isSuccessful()) {
             return '';
         }
 
-        $baseUrl = $this->request->getTestMode()
-            ? $this->test_redirect_base
-            : $this->prod_redirect_base;
+        // v2.1: redirect URL is returned dynamically in CommonPaymentUrl
+        $baseUrl = $this->parsedData['CommonPaymentUrl'] ?? '';
 
-        return $baseUrl . '?PaymentToken=' . urlencode($this->getPaymentToken());
+        if (empty($baseUrl)) {
+            return '';
+        }
+
+        return $baseUrl . '?Ptkn=' . urlencode($this->getPaymentToken());
     }
 
     public function getRedirectMethod(): string
@@ -70,7 +83,17 @@ class CommonPaymentRegisterResponse extends AbstractResponse implements Redirect
 
     public function getMessage()
     {
-        return $this->parsedData['ErrorMessage'] ?? '';
+        return $this->parsedData['ResponseMessage'] ?? $this->parsedData['ErrorMessage'] ?? '';
+    }
+
+    public function getErrorCode(): ?string
+    {
+        return $this->parsedData['ErrorCode'] ?? null;
+    }
+
+    public function getShortLink(): ?string
+    {
+        return $this->parsedData['ShortLink'] ?? null;
     }
 
     public function getData()

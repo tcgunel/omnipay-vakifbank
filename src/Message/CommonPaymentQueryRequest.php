@@ -8,14 +8,20 @@ use Omnipay\Vakifbank\Exceptions\OmnipayVakifbankCommonPaymentRequestException;
 use Omnipay\Vakifbank\Traits\CommonPaymentGettersSetters;
 use Omnipay\Vakifbank\Traits\PurchaseGettersSetters;
 
+/**
+ * Vakifbank Common Payment Query (Sorgulama) - Verify Transaction
+ *
+ * Uses the new API Gateway endpoints (v2.1, updated 27.02.2026).
+ * CRITICAL: Must ALWAYS be called after customer returns from payment page.
+ */
 class CommonPaymentQueryRequest extends AbstractRequest
 {
     use PurchaseGettersSetters;
     use CommonPaymentGettersSetters;
 
-    protected $test_endpoint = 'https://onlineodemetest.vakifbank.com.tr:4443/UIService/CommonPayment.asmx';
+    protected $test_endpoint = 'https://inbound.apigatewaytest.vakifbank.com.tr:8443/commonPayment/GetVposTransaction';
 
-    protected $prod_endpoint = 'https://web.vakifbank.com.tr/ServiceHost/Vpos7/CommonPayment.asmx';
+    protected $prod_endpoint = 'https://inbound.apigateway.vakifbank.com.tr:8443/commonPayment/GetVposTransaction';
 
     /**
      * @throws InvalidRequestException
@@ -28,16 +34,17 @@ class CommonPaymentQueryRequest extends AbstractRequest
             'terminal_no',
         );
 
-        if (!$this->getPaymentToken() && !$this->getTransactionId()) {
+        if (! $this->getPaymentToken() && ! $this->getTransactionId()) {
 
             throw new InvalidRequestException('PaymentToken yada TransactionId gerekli');
 
         }
 
+        // v2.1 API uses different field names
         $data = [
-            'HostMerchantId' => $this->getMerchantId(),
-            'MerchantPassword' => $this->getPassword(),
-            'HostTerminalId' => $this->getTerminalNo(),
+            'MerchantNumber' => $this->getMerchantId(),
+            'Password' => $this->getPassword(),
+            'TerminalNumber' => $this->getTerminalNo(),
         ];
 
         if ($this->getPaymentToken()) {
@@ -56,22 +63,26 @@ class CommonPaymentQueryRequest extends AbstractRequest
      */
     public function sendData($data)
     {
+        // v2.1 API uses JSON POST
         $httpResponse = $this->httpClient->request(
             'POST',
             $this->getTestMode() ? $this->test_endpoint : $this->prod_endpoint,
             [
-                'Content-Type' => 'application/x-www-form-urlencoded',
-                'Accept' => 'application/xml',
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
             ],
-            http_build_query($data)
+            json_encode($data)
         );
 
         if ($httpResponse->getStatusCode() !== 200) {
 
-            throw new OmnipayVakifbankCommonPaymentRequestException('Common Payment Query Request sırasında bir hata oluştu.', $httpResponse->getStatusCode());
+            throw new OmnipayVakifbankCommonPaymentRequestException('Common Payment Query Request sirasinda bir hata olustu.', $httpResponse->getStatusCode());
 
         }
 
-        return $this->response = new CommonPaymentQueryResponse($this, $httpResponse);
+        $responseBody = (string) $httpResponse->getBody();
+        $responseData = json_decode($responseBody, true) ?? [];
+
+        return $this->response = new CommonPaymentQueryResponse($this, $responseData);
     }
 }

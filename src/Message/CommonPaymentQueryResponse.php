@@ -4,11 +4,16 @@ namespace Omnipay\Vakifbank\Message;
 
 use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\RequestInterface;
-use Omnipay\Vakifbank\Models\CommonPaymentQueryResponseModel;
 
+/**
+ * Vakifbank Common Payment Query Response (v2.1 API Gateway)
+ *
+ * Response is JSON. Success when ErrorCode === '0000'.
+ * Error code '5003' means no completed payment found for this token/transaction.
+ */
 class CommonPaymentQueryResponse extends AbstractResponse
 {
-    protected $response;
+    protected $parsedData = [];
 
     protected $request;
 
@@ -18,22 +23,42 @@ class CommonPaymentQueryResponse extends AbstractResponse
 
         $this->request = $request;
 
-        $this->response = $data;
+        $this->parsedData = is_array($data) ? $data : [];
     }
 
     public function isSuccessful(): bool
     {
-        return $this->response->RC === '0000';
+        return ($this->parsedData['ErrorCode'] ?? '') === '0000';
     }
 
     public function getMessage(): string
     {
-        return $this->response->ErrorMessage ?? '';
+        return $this->parsedData['ResponseMessage'] ?? $this->parsedData['ErrorMessage'] ?? '';
     }
 
-    public function getData(): CommonPaymentQueryResponseModel
+    public function getErrorCode(): ?string
     {
-        return $this->response;
+        return $this->parsedData['ErrorCode'] ?? null;
+    }
+
+    public function getTransactionId(): ?string
+    {
+        return $this->parsedData['TransactionId'] ?? null;
+    }
+
+    public function getAuthCode(): ?string
+    {
+        return $this->parsedData['AuthCode'] ?? null;
+    }
+
+    public function getAmount(): ?string
+    {
+        return $this->parsedData['Amount'] ?? null;
+    }
+
+    public function getData()
+    {
+        return $this->parsedData;
     }
 
     public function getRedirectData()
